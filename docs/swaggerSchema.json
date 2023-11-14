@@ -1,0 +1,49 @@
+{
+  "client": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string",
+        "description": "La dirección de correo electrónico del cliente.",
+        "format": "email"
+      },
+      "fullname": {
+        "type": "string",
+        "description": "El nombre completo del cliente."
+      },
+      "password": {
+        "type": "string",
+        "description": "La contraseña del cliente."
+      },
+      "phone": {
+        "type": "string",
+        "description": "El número de teléfono del cliente."
+      },
+      "address": {
+        "type": "string",
+        "description": "La dirección del cliente."
+      },
+      "photo_url": {
+        "type": "string",
+        "description": "URL de la foto del cliente."
+      },
+      "isActive": {
+        "type": "boolean",
+        "description": "Indica si el cliente está activo o inactivo."
+      },
+      "verificationCode": {
+        "type": "number"
+      },
+      "verificationCodeExpires": {
+        "type": "date"
+      },
+      "_id": {
+        "type": "objectid"
+      },
+      "__v": {
+        "type": "number"
+      }
+    },
+    "required": ["email", "fullname"]
+  }
+}

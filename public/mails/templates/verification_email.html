@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verificación de correo electrónico</title>
+    <style>
+      body {
+        background-color: #f5f5f5;
+        font-family: 'Arial', sans-serif;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        background-color: #fffaf5;
+        color: #333;
+        padding: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+      .footer {
+        background-color: #2f2d53;
+        color: #fff;
+        padding: 10px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+
+      .verification-code {
+        font-size: 36px;
+        font-family: 'Courier New', monospace;
+        color: #ff6600;
+      }
+
+      .customer-name {
+        font-size: 28px;
+        font-weight: bold;
+        color: #2f2d53;
+      }
+
+      .link-button {
+        background-color: #ff5b2e;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        display: inline-block;
+        font-size: 16px;
+        margin: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .link-button:hover {
+        background-color: #ff7b4e;
+        cursor: pointer;
+      }
+
+      .link-button {
+        text-decoration: none;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img
+          src="https://res.cloudinary.com/dxq0pypxu/image/upload/v1697885162/logo_orange_qzn2pi.png"
+          alt="Vet-Care"
+          border="0"
+        />
+        <h1>¡Código de recuperación de contraseña!</h1>
+      </div>
+      <div class="content">
+        <p class="customer-name">Hola, [Nombre del Cliente].</p>
+        <p>Aquí tienes tu código de recuperación:</p>
+        <p><strong class="verification-code">[Código de Verificación]</strong></p>
+        <p>Este código es válido por [Duración del Código] minutos.</p>
+        <p>Por favor, utilízalo para verificar tu cuenta.</p>
+        <a href="https://vetcarepro.vercel.app/recovery-password">
+          <button class="link-button">Recuperar mi contraseña</button>
+        </a>
+        <p>¿No funcionó? Copia el siguiente enlace en tu navegador web:</p>
+        <a href="https://vetcarepro.vercel.app/recovery-password">https://vetcarepro.vercel.app/recovery-password</a>
+        <p>
+          Para evitar que esto te vuelva a pasar, usa una contraseña segura y única. Asegúrate también de no olvidar tu
+          contraseña, de lo contrario perderás el acceso a tus datos; te recomendamos usar un administrador de
+          contraseñas. Para obtener más información sobre medidas de seguridad, consulta:
+          <a href="https://vetcarepro.vercel.app/security">https://vetcarepro.vercel.app/security</a>
+        </p>
+        <p>¡Gracias por unirte a nosotros!</p>
+      </div>
+      <div class="footer">
+        <p>Saludos cordiales,</p>
+        <p>— El Equipo VetCare</p>
+        <img
+          src="https://res.cloudinary.com/dxq0pypxu/image/upload/v1697885162/Vet_Care_vzlux4.png"
+          alt="Vet-Care"
+          border="0"
+        />
+        <p>© 2023 VetCare. Todos los derechos reservados</p>
+      </div>
+    </div>
+  </body>
+</html>

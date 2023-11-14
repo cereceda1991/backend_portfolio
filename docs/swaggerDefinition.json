@@ -1,0 +1,1101 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Vet Care",
+    "version": "1.0.0",
+    "description": "Documentación de API"
+  },
+  "servers": [
+    {
+      "url": "https://s11-03-react-node-production.up.railway.app/api/v1",
+      "description": "Servidor de Producción"
+    },
+    {
+      "url": "http://localhost:3001/api/v1",
+      "description": "Servidor de desarrollo"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "client": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "La dirección de correo electrónico del cliente.",
+            "format": "email"
+          },
+          "fullname": {
+            "type": "string",
+            "description": "El nombre completo del cliente."
+          },
+          "password": {
+            "type": "string",
+            "description": "La contraseña del cliente."
+          },
+          "phone": {
+            "type": "string",
+            "description": "El número de teléfono del cliente."
+          },
+          "address": {
+            "type": "string",
+            "description": "La dirección del cliente."
+          },
+          "photo_url": {
+            "type": "string",
+            "description": "URL de la foto del cliente."
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Indica si el cliente está activo o inactivo."
+          },
+          "verificationCode": {
+            "type": "number"
+          },
+          "verificationCodeExpires": {
+            "type": "date"
+          },
+          "_id": {
+            "type": "objectid"
+          },
+          "__v": {
+            "type": "number"
+          }
+        },
+        "required": ["email", "fullname"]
+      }
+    },
+    "responses": {
+      "ServerError": {
+        "description": "Error interno del servidor",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error interno del servidor"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "description": "Acceso no autorizado",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Acceso no autorizado. Token inválido"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadRequestError": {
+        "description": "Bad Request: Error en la solicitud",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad Request: Error en la solicitud"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Recurso no encontrado",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Recurso no encontrado"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Error409": {
+        "description": "Error de conflicto",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "fail"
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error de conflicto: Detalles."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Registra un nuevo cliente",
+        "description": "Registra un nuevo cliente con la información proporcionada",
+        "tags": ["Auth"],
+        "requestBody": {
+          "description": "Datos del cliente a crear",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "fullname": "vet-care",
+                "email": "vetcare@gmail.com",
+                "password": "Admin123$"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cliente creado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cliente creado con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjY1MjRmNzBlMjZkMDU0YWIzZDgwYjNiMSIsImlhdCI6MTY5NjkyMTM1OCwiZXhwIjoxNjk2OTI4NTU4fQ.2H7X_kCNY3NyRMcPA3KA_seak-imj7Mt8fd9rdS1Qr8"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Iniciar sesión de cliente",
+        "description": "Inicia sesión de un cliente utilizando su correo electrónico y contraseña.",
+        "tags": ["Auth"],
+        "requestBody": {
+          "description": "Datos de inicio de sesión del cliente",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "email": "vetcarefamily@gmail.com",
+                "password": "Admin123$"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Inicio de sesión exitoso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Inicio de sesión exitoso"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjY1MjRmNzBlMjZkMDU0YWIzZDgwYjNiMSIsImlhdCI6MTY5NjkyNTcyOSwiZXhwIjoxNjk2OTMyOTI5fQ.T-bYJ9txX939wX5P41DIYp1P3Pm9MhW-txy2dtY1ifE"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "description": "Credenciales incorrectas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "fail"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Credenciales incorrectas"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/auth/recovery-password": {
+      "post": {
+        "summary": "Recuperación de contraseña",
+        "description": "Envia un código de recuperación de contraseña al cliente utilizando su correo electrónico.",
+        "tags": ["Auth"],
+        "requestBody": {
+          "description": "Datos de recuperación de contraseña del cliente",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "email": "vetcare@gmail.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Solicitud de recuperación de contraseña exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Solicitud de recuperación de contraseña exitosa"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Se ha enviado un código de verificación. Por favor, verifica tu bandeja de entrada."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/auth/validate-code": {
+      "post": {
+        "summary": "Validar código de verificación",
+        "description": "Valida el código de verificación para recuperar constraseña de un cliente.",
+        "tags": ["Auth"],
+        "requestBody": {
+          "description": "Datos para validar el código de verificación del cliente",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "validationCode": 4202
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Código de verificación válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Código de verificación válido. Puede actualizar su contraseña."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "token"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/auth/update-password": {
+      "post": {
+        "summary": "Actualizar contraseña",
+        "description": "Actualiza la contraseña de un cliente autenticado.",
+        "tags": ["Auth"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "description": "Nueva contraseña del cliente",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "newPassword": "Admin123$"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contraseña actualizada con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contraseña actualizada con éxito"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "summary": "Iniciar sesión de cliente con Google",
+        "description": "Inicia sesión de un cliente utilizando la API de Google OAuth. La autenticación se realiza en una página externa de Google y la respuesta exitosa se genera después de una autenticación exitosa en la página de inicio de sesión de Google.Este entorno solo es informativo. Para probar esta ruta, utiliza la siguiente URL en tu navegador:<br><br>**Producción:** [Haz clic aquí para iniciar sesión en producción](https://s11-03-react-node-production.up.railway.app/api/v1/auth/google)<br>**Desarrollo:** [Haz clic aquí para iniciar sesión en desarrollo](http://localhost:3001/api/v1/auth/google)",
+        "tags": ["Auth"],
+        "responses": {
+          "200": {
+            "description": "Inicio de sesión exitoso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Inicio de sesión exitoso"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjY1MjRmNzBlMjZkMDU0YWIzZDgwYjNiMSIsImlhdCI6MTY5NjkyNTcyOSwiZXhwIjoxNjk2OTMyOTI5fQ.T-bYJ9txX939wX5P41DIYp1P3Pm9MhW-txy2dtY1ifE"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/clients": {
+      "get": {
+        "summary": "Obtener todos los clientes activos",
+        "description": "Obtiene una lista de todos los clientes activos en el sistema",
+        "tags": ["Clients"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número de página",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Límite de usuarios por consulta",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Clientes encontrados con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Clientes encontrados con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "example": 20
+                        },
+                        "next": {
+                          "type": "string",
+                          "example": "https://s11-03-react-node-production.up.railway.app/api/v1/clients?page=2&limit=10"
+                        },
+                        "previous": {
+                          "type": "string",
+                          "example": null
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "_id": {
+                                "type": "string",
+                                "example": "6524e02ef3d141c6a4325c94"
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": "juancontreras@yahoo.es"
+                              },
+                              "fullname": {
+                                "type": "string",
+                                "example": "Juan Contreras"
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://res.cloudinary.com/dxq0pypxu/image/upload/v1696476957/nn12qmebo7v6qhbwbkdf.png"
+                              },
+                              "isActive": {
+                                "type": "boolean",
+                                "example": true
+                              },
+                              "__v": {
+                                "type": "integer",
+                                "example": 0
+                              },
+                              "address": {
+                                "type": "string",
+                                "example": "123 Calle Principal"
+                              },
+                              "phone": {
+                                "type": "string",
+                                "example": "123-456-7890"
+                              }
+                            }
+                          }
+                        },
+                        "total": {
+                          "type": "integer",
+                          "example": 50
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/clients/send-mail": {
+      "post": {
+        "summary": "Enviar una correo con una consulta médica",
+        "description": "Envía una solicitud para una evaluación médica, no requiere registro del cliente",
+        "tags": ["Clients"],
+        "requestBody": {
+          "description": "Cuerpo de la solicitud",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "type": "string",
+                    "example": "Max Cereceda"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "cereceda1991@gmail.com"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Mi mascota muestra dificultad al comer y parece incómoda. ¿Podrían evaluarnos para identificar y tratar cualquier problema dental o de salud?"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Solicitud de evaluación enviada con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Solicitud de evaluación enviada con éxito"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/clients/profile": {
+      "get": {
+        "summary": "Obtiene el perfil del usuario en sesión",
+        "description": "Obtiene el perfil detallado del usuario y sus mascotas registradas.",
+        "tags": ["Clients"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Perfil del usuario obtenido con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Perfil del usuario obtenido con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "6531b5fd687f4cd9ab2db81b"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "vetcarefamily@gmail.com"
+                        },
+                        "fullname": {
+                          "type": "string",
+                          "example": "vet care family"
+                        },
+                        "photo_url": {
+                          "type": "string",
+                          "example": "https://res.cloudinary.com/dxq0pypxu/image/upload/v1696476957/nn12qmebo7v6qhbwbkdf.png"
+                        },
+                        "pets": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "_id": {
+                                "type": "string",
+                                "example": "6531b85c687f4cd9ab2db821"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Alan"
+                              },
+                              "specie": {
+                                "type": "string",
+                                "example": "Perro"
+                              },
+                              "sex": {
+                                "type": "string",
+                                "example": "Macho"
+                              },
+                              "age": {
+                                "type": "integer",
+                                "example": 2
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://res.cloudinary.com/dxq0pypxu/image/upload/v1697760338/5_ddoxkd.png"
+                              },
+                              "clientId": {
+                                "type": "string",
+                                "example": "6531b5fd687f4cd9ab2db81b"
+                              },
+                              "__v": {
+                                "type": "integer",
+                                "example": 0
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/clients/{clientId}": {
+      "get": {
+        "summary": "Obtener un cliente por ID",
+        "description": "Obtiene un cliente específico por su ID",
+        "tags": ["Clients"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "description": "ID del cliente a obtener",
+            "schema": {
+              "type": "string",
+              "example": "6524f70e26d054ab3d80b3b1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente encontrado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cliente encontrado con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "6524e1f0101561447796a0c6"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "cereceda1991@gmail.com"
+                        },
+                        "fullname": {
+                          "type": "string",
+                          "example": "Max Cereceda"
+                        },
+                        "photo_url": {
+                          "type": "string",
+                          "example": "https://res.cloudinary.com/dxq0pypxu/image/upload/v1696476957/nn12qmebo7v6qhbwbkdf.png"
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "__v": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "address": {
+                          "type": "string",
+                          "example": "123 Calle Principal"
+                        },
+                        "phone": {
+                          "type": "string",
+                          "example": "123-456-7890"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar un cliente por ID",
+        "description": "Actualiza un cliente específico por su ID",
+        "tags": ["Clients"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "description": "ID del cliente a actualizar",
+            "schema": {
+              "type": "string",
+              "example": "6524f70e26d054ab3d80b3b1"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Datos del cliente a actualizar",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "type": "string",
+                    "example": "Bob Johnson"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "123-456-7890"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "micorreo@gmail.com"
+                  },
+                  "photo_url": {
+                    "type": "string",
+                    "example": "https://res.cloudinary.com/dxq0pypxu/image/upload/v1696476957/nn12qmebo7v6qhbwbkdf.png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cliente actualizado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cliente actualizado con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "6524e1f0101561447796a0c6"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "cereceda1991@gmail.com"
+                        },
+                        "fullname": {
+                          "type": "string",
+                          "example": "Max Cereceda"
+                        },
+                        "photo_url": {
+                          "type": "string",
+                          "example": "https://res.cloudinary.com/dxq0pypxu/image/upload/v1696476957/nn12qmebo7v6qhbwbkdf.png"
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "__v": {
+                          "type": "integer",
+                          "example": 0
+                        },
+                        "phone": {
+                          "type": "string",
+                          "example": "123-456-7890"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Desactivar un cliente por ID",
+        "description": "Desactiva un cliente específico por su ID",
+        "tags": ["Clients"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "description": "ID del cliente a desactivar",
+            "schema": {
+              "type": "string",
+              "example": "651de63b2cd377c711b08f7d"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente desactivado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cliente desactivado con éxito"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    }
+  }
+}
